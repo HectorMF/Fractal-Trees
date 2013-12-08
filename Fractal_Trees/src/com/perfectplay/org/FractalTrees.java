@@ -22,7 +22,7 @@ public class FractalTrees implements ApplicationListener {
 	private Skin skin;
 	private Stage stage;
 	
-	private static Tree tree;
+	private static Fractal tree;
 	
 	@Override
 	public void create() {		
@@ -37,7 +37,7 @@ public class FractalTrees implements ApplicationListener {
 	
 	// Set the tree to be rendered statically. 
 	// Allows the controller to update the program simply.
-	public static void setTree(Tree t){
+	public static void setTree(Fractal t){
 		tree = t;
 	}
 	

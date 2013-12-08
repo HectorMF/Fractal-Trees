@@ -11,18 +11,20 @@ import com.badlogic.gdx.math.Vector2;
  * Written By: Hector Medina-Fetterman
  * Date: 12/7/2013
  */
-public class Branch {
+public class Branch implements Comparable<Branch> {
 	//store all 8 vertices of the box, to handle our own transformations
 	public Vector2[] vertices;
-
+	public static int Center = 0;
+	public static int Left = 1;
+	public static int Right = 2;
 	//store some extra variables to make iterations easier to create 
 	private float x, y;
 	private int width;
 	private int height;
 	private Color color;
 	private int rotation;
-
-	public Branch(float x, float y, int width, int height, int rotation, Color color){
+	private int level;
+	public Branch(int level, int position, float x, float y, int width, int height, int rotation, Color color){
 		
 		//create the basic vertices for a square
 		vertices = new Vector2[4];
@@ -43,7 +45,6 @@ public class Branch {
 		vertices[3].x = 0;
 		vertices[3].y = 1;
 		
-		//create the transformations matrices
 		Matrix3 r = new Matrix3();
 		r.setToRotation(rotation);
 		Matrix3 t1 = new Matrix3();
@@ -53,14 +54,33 @@ public class Branch {
 		Matrix3 s = new Matrix3();
 		s.setToScaling(width, height);
 		
-		//multiply each vertice by the set of transformations
-		for(int i = 0; i < vertices.length; i ++){
-			vertices[i].mul(s);
-			vertices[i].mul(new Matrix3().setToTranslation(-width/(float)2,0));
-			vertices[i].mul(r);
-			vertices[i].mul(new Matrix3().setToTranslation(width/(float)2,0));
-			vertices[i].mul(t1);
-			vertices[i].mul(t2);
+		if(position == Center){
+			for(int i = 0; i < vertices.length; i ++){
+				vertices[i].mul(s);
+				vertices[i].mul(new Matrix3().setToTranslation(-width/(float)2,0));
+				vertices[i].mul(r);
+				vertices[i].mul(new Matrix3().setToTranslation(width/(float)2,0));
+				vertices[i].mul(t1);
+				vertices[i].mul(t2);
+			}
+		}
+		
+		if(position == Left){
+			for(int i = 0; i < vertices.length; i ++){
+				vertices[i].mul(s);
+				vertices[i].mul(r);
+				vertices[i].mul(t2);
+			}
+		}
+		
+		if(position == Right){
+			for(int i = 0; i < vertices.length; i ++){
+				vertices[i].mul(s);
+				vertices[i].mul(new Matrix3().setToTranslation(-width,0));
+				vertices[i].mul(r);
+				vertices[i].mul(t2);
+			}
+			
 		}
 		
 		this.x = x;
@@ -69,16 +89,23 @@ public class Branch {
 		this.height = height;
 		this.rotation = rotation;
 		this.color = color;
+		this.level = level;
 	}
 	
-	public void draw(ShapeRenderer renderer){
-		
+	public void drawRoundedRectangle(ShapeRenderer renderer){
 		//renders two triangles for the rectangle, and two circles to create rounded rectangles
 		renderer.setColor(color);
 		renderer.triangle(vertices[0].x, vertices[0].y, vertices[1].x, vertices[1].y, vertices[2].x, vertices[2].y);
 		renderer.triangle(vertices[0].x, vertices[0].y, vertices[3].x, vertices[3].y, vertices[2].x, vertices[2].y);
 		renderer.circle(x, y, width/(float)2);
 		renderer.circle(getCenterPosition().x, getCenterPosition().y, width/(float)2);
+	}
+	
+	public void drawRectangle(ShapeRenderer renderer){
+		//renders two triangles for the rectangle, and two circles to create rounded rectangles
+		renderer.setColor(color);
+		renderer.triangle(vertices[0].x, vertices[0].y, vertices[1].x, vertices[1].y, vertices[2].x, vertices[2].y);
+		renderer.triangle(vertices[0].x, vertices[0].y, vertices[3].x, vertices[3].y, vertices[2].x, vertices[2].y);
 	}
 	
 	public Vector2 getCenterPosition(){
@@ -99,4 +126,18 @@ public class Branch {
 	public int getRotation(){
 		return rotation;
 	}
+	
+	public int getLevel(){
+		return level;
+	}
+	
+	@Override
+	public int compareTo(Branch o) {
+		if(o.getLevel() > getLevel())
+			return -1;
+		if(o.getLevel() < getLevel())
+			return 1;
+		return 0;
+	}
+
 }

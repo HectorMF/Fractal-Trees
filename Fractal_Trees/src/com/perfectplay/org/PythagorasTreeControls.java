@@ -11,31 +11,30 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
  * Written By: Hector Medina-Fetterman
  * Date: 12/7/2013
  */
-public class FractalControls extends Table{
+public class PythagorasTreeControls extends Table implements FractalController{
 	private Skin skin;
 	
 	public final Slider iterations;
-	public final Slider width;
-	public final Slider height;
+	public final Slider size;
 	public final Slider angle;
 	
 	private Label label1;
 	private Label label2;
-	private Label label3;
 	private Label label4;
 	
+	private int val1; 
+	private int val2;
+	private int val3;
 	//instantiates all the required objects for the GUI
-	public FractalControls(Skin skin){
+	public PythagorasTreeControls(Skin skin){
 		super(skin);
 		this.skin = skin;
 		this.iterations = new Slider(0, 15, 1, false, skin);
-		this.width = new Slider(0,300,1, false, skin);
-		this.height = new Slider(0,300,1, false, skin);
-		this.angle = new Slider(0,270,1, false, skin);
-		this.width.setValue(50);
-		this.height.setValue(150);
+		this.size = new Slider(0,300,1, false, skin);
+		this.angle = new Slider(0,90,1, false, skin);
+		this.size.setValue(115);
 		this.iterations.setValue(11);
-		this.angle.setValue(90);
+		this.angle.setValue(45);
 		this.setupGUI();
 	}
 	
@@ -54,33 +53,32 @@ public class FractalControls extends Table{
 		this.add(label4).padLeft(10).width(100).center();
 		
 		this.row();
-		this.add("Width: ").padLeft(10);
-		this.add(this.width);
-		this.label2 = new Label(this.width.getValue()+"", skin);
+		this.add("Size: ").padLeft(10);
+		this.add(this.size);
+		this.label2 = new Label(this.size.getValue()+"", skin);
 		this.add(label2).padLeft(10).width(100).center();
 		
-		this.row();
-		this.add("Height: ");
-		this.add(this.height);
-		this.label3 = new Label(this.height.getValue()+"", skin);
-		this.add(label3).padLeft(10).width(100).center();
 	}
 	
 	@Override
 	public void act(float delta){
+		
 		//act is called when a member of the stage is changed. Update the fractal tree with new information
 		super.act(delta);
-		this.label1.setText((int)this.iterations.getValue()+"");
-		this.label2.setText((int)this.width.getValue()+"");
-		this.label3.setText((int)this.height.getValue()+"");
-		this.label4.setText((int)this.angle.getValue()+"°");
-		FractalTrees.setTree(new Tree((int)this.iterations.getValue(), 
-									  (int)this.angle.getValue(), 
-									  (int)this.width.getValue(),
-									  (int)this.height.getValue(), 
-									  Color.valueOf("D4E576"), 
-									  Color.valueOf("126845")));
+		if(val1 != (int)this.iterations.getValue() || val2 != (int)this.size.getValue() || val3 != (int)this.angle.getValue()){
+			val1 = (int)this.iterations.getValue();
+			val2 = (int)this.size.getValue();
+			val3 = (int)this.angle.getValue();
+			
+			this.label1.setText((int)this.iterations.getValue()+"");
+			this.label2.setText((int)this.size.getValue()+"");
+			this.label4.setText((int)this.angle.getValue()+"°");
+			FractalTrees.setTree(new PythagorasTree((int)this.iterations.getValue(), 
+										  (int)this.angle.getValue(), 
+										  (int)this.size.getValue(),
+										  (int)this.size.getValue(), 
+										  Color.valueOf("D4E576"), 
+										  Color.valueOf("126845")));
+		}
 	}
-
-	
 }
