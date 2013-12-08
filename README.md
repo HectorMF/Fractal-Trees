@@ -7,10 +7,10 @@ Simple fractal test to examine the structure and aesthetics of fractal plants fo
 A LibGDX Scene2D GUI controls fractal parameters for each fractal.  
 
 Current Presets:
-H Trees
-Pythagoras Trees
-Ferns
+H Trees,
+Pythagoras Trees,
+Ferns,
 
 To Do:
-L-System Plant modeling
-Randomization
+L-System Plant modeling,
+Randomization,
